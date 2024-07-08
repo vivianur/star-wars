@@ -1,0 +1,52 @@
+<!-- Home, main or index component - START -->
+<ng-container *ngIf="peopleAllThree$ | async as people; else loadingData">
+
+  <!-- Container to display data when it is successfully loaded and not empty - START -->
+  <ng-container *ngIf="people.length > 0">
+    <div class="container justify-center flex flex-col gap-6 lg:px-20 md:pt-32 md:pb-5 px-6 pt-10 pb-5 md:flex-row">
+
+      <!-- Loop through the first three people and display their data - START -->
+      <div *ngFor="let jedi of people; let i = index"
+           [ngClass]="{
+             'yoda-bg-img': i === 0 || jedi.name === 'Yoda',
+             'darth-vader-bg-img': i === 1 || jedi.name === 'Darth Vader',
+             'obi-wan-kenobi-bg-img': i === 2 || jedi.name === 'Obi-Wan Kenobi'
+           }"
+           class="p-6 md:h-614 md:w-283 w-full h-full rounded-[10px] shadow-star-wars-card content-end fade-in rotate-card"
+           [@rotate]="getRotationState(i)">
+
+        <!-- Custom card component for displaying and editing Jedi details - START -->
+        <app-card
+          [jedi]="jedi"
+          [editMode]="editModes[i]"
+          (toggleEdit)="toggleEditMode(i)"
+          (saveEdit)="saveEdited(i)"
+          (cancelEdit)="cancelEdit(i)"
+        />
+        <!-- Custom card component for displaying and editing Jedi details - END -->
+
+      </div>
+      <!-- Loop through the first three people and display their data - END -->
+
+    </div>
+  </ng-container>
+  <!-- Container to display data when it is successfully loaded and not empty - END -->
+
+  <!-- Container to display an image if no data is available or there is an error - START -->
+  <ng-container *ngIf="people.length === 0 || errorMessage">
+    <div class="absolute top-2/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <img [src]="noDataDarthVader" alt="Darth Vader">
+    </div>
+  </ng-container>
+  <!-- Container to display an image if no data is available or there is an error - END -->
+
+</ng-container>
+<!-- Home, main or index component - END -->
+
+<!-- Template to display a loading spinner while data is being fetched - START -->
+<ng-template #loadingData>
+  <div class="absolute top-2/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <app-spinner *ngIf="spinner"></app-spinner>
+  </div>
+</ng-template>
+<!-- Template to display a loading spinner while data is being fetched - END-->
